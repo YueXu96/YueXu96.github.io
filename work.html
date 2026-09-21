@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work — Yue Xu</title>
+<meta name="description" content="Selected work by Yue Xu — three Bjarke Ingels Group projects, plus two masterplans exhibited at the Venice Biennale and MIPIM.">
+<link rel="icon" href="assets/logo_mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <a class="nav-mark" href="index.html" aria-label="Home">
+    <span>Yue Xu</span>
+  </a>
+  <nav class="nav-links">
+    <a href="work.html" class="is-active" aria-current="page">Work</a>
+    <a href="photography.html">Photography</a>
+    <a href="resume.html">Resume</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span><span></span>
+  </button>
+</header>
+
+<!-- ============ PAGE HEAD ============ -->
+<div class="page-head">
+  <p class="eyebrow">Portfolio</p>
+  <h1>Work</h1>
+</div>
+
+<!-- ============ PROJECTS ============ -->
+<div class="section-head">
+  <p class="eyebrow">Selected work</p>
+  <h2>Three projects at Bjarke Ingels Group, carried from early massing and planning submissions through to façade and fit‑out detailing.</h2>
+</div>
+<section class="work">
+  <div class="projects" id="projects"><!-- injected by js --></div>
+</section>
+
+<!-- ============ EXHIBITION ============ -->
+<div class="section-head">
+  <p class="eyebrow">Exhibition</p>
+  <h2>Two projects shown to international audiences — at the Venice Biennale and in Oman's national pavilion at MIPIM.</h2>
+</div>
+<section class="exhibition">
+  <div class="exhibits" id="exhibitions"><!-- injected by js --></div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-mark">
+      <span>Yue Xu</span>
+    </div>
+    <p class="footer-line">Architect, RIBA Part 3 — currently practising at Bjarke Ingels Group, London.<br>Portfolio compiled from independent and practice‑based work, 2015–2026.</p>
+  </div>
+  <nav class="footer-nav">
+    <a href="work.html" aria-current="page">Work</a>
+    <a href="photography.html">Photography</a>
+    <a href="resume.html">Resume</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="footer-bottom">
+    <span>© 2026 Yue Xu</span>
+    <a href="index.html">Index</a>
+  </div>
+</footer>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <button class="lb-prev" id="lbPrev" aria-label="Previous image">‹</button>
+  <button class="lb-next" id="lbNext" aria-label="Next image">›</button>
+  <div class="lb-frame">
+    <img id="lbImage" src="" alt="">
+  </div>
+  <div class="lb-caption">
+    <span id="lbTitle"></span>
+    <span id="lbCount"></span>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

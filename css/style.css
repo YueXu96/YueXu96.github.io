@@ -1,0 +1,615 @@
+/* ===================================================================
+   Yue Xu — Architecture Portfolio
+   Tokens
+=================================================================== */
+:root{
+  --bg: #FAF9F6;
+  --paper: #F3F1EB;
+  --ink: #16150F;
+  --ink-soft: #57554C;
+  --ink-faint: #8B8879;
+  --line: #DEDACE;
+  --line-strong: #C9C4B4;
+  --stone: #9C8354;
+  --stone-deep: #6F5A34;
+  --panel: #121109;
+  --panel-text: #EDE9DD;
+  --panel-line: #34321F;
+  --panel-soft: #A7A38E;
+
+  /* single typeface across the whole site — the three roles are kept
+     as tokens so weight/letterspacing rules below still read clearly */
+  --serif: "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --sans: "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --gutter: clamp(20px, 4vw, 64px);
+  --maxw: 1440px;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img{ max-width: 100%; display: block; }
+a{ color: inherit; text-decoration: none; }
+
+::selection{ background: var(--stone); color: #fff; }
+
+/* faint paper grain, purely decorative, static */
+.grain{
+  position: fixed; inset: 0; pointer-events: none; z-index: 999;
+  opacity: 0.035; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.eyebrow{
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  color: var(--stone-deep);
+  margin: 0 0 18px;
+}
+
+/* ===================================================================
+   Nav
+=================================================================== */
+.nav{
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px var(--gutter);
+  transition: background 0.35s ease, border-color 0.35s ease, padding 0.35s ease;
+  border-bottom: 1px solid transparent;
+}
+.nav.is-scrolled{
+  background: rgba(250,249,246,0.88);
+  backdrop-filter: blur(10px);
+  border-bottom-color: var(--line);
+  padding-top: 14px; padding-bottom: 14px;
+}
+.nav-mark{
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: 0.01em;
+  color: var(--ink);
+}
+
+.nav-links{ display: flex; gap: 36px; }
+.nav-links a{
+  font-size: 14px; color: var(--ink); opacity: 0.88;
+  transition: opacity 0.2s ease, color 0.35s ease;
+  position: relative;
+}
+.nav-links a:hover{ opacity: 1; }
+.nav-links a::after{
+  content:""; position: absolute; left:0; right:0; bottom:-6px; height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.nav-links a:hover::after{ transform: scaleX(1); }
+.nav-links a.is-active{ opacity: 1; }
+.nav-links a.is-active::after{ transform: scaleX(1); }
+
+/* index.html only — the nav floats over the dark hero photo until it sticks */
+body.page-hero .nav:not(.is-scrolled) .nav-mark,
+body.page-hero .nav:not(.is-scrolled) .nav-links a{ color: #fff; }
+body.page-hero .nav:not(.is-scrolled) .nav-toggle span{ background: #fff; }
+
+.nav-toggle{ display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.nav-toggle span{
+  display: block; width: 22px; height: 1px; background: var(--ink); margin: 5px 0;
+  transition: background 0.3s ease;
+}
+
+/* ===================================================================
+   Hero
+=================================================================== */
+.hero{
+  position: relative;
+  height: 100vh; min-height: 560px;
+  overflow: hidden;
+  color: #fff;
+  background: #2A2A28;
+}
+.hero-media{ position: absolute; inset: 0; }
+.hero-media img{
+  width: 100%; height: 100%; object-fit: cover;
+  transform: scale(1.03);
+}
+/* the background photo is light concrete, so the scrim has to do real
+   work at the top (nav) and bottom (title) for the type to hold up */
+.hero-scrim{
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(12,12,10,0.55) 0%, rgba(12,12,10,0.18) 28%, rgba(12,12,10,0.34) 58%, rgba(10,10,8,0.82) 100%);
+}
+.hero-content{
+  position: absolute; left: var(--gutter); right: var(--gutter); bottom: 76px;
+}
+.hero-kicker{
+  font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.02em;
+  opacity: 0.86; margin: 0 0 18px;
+}
+.hero-title{
+  font-family: var(--serif); font-weight: 300; font-style: normal;
+  font-size: clamp(64px, 13vw, 168px);
+  line-height: 0.98; margin: 0 0 14px; letter-spacing: -0.02em;
+}
+.hero-role{ font-size: clamp(14px, 1.6vw, 18px); opacity: 0.92; max-width: 46ch; margin: 0; }
+
+.hero-scroll{
+  position: absolute; right: var(--gutter); bottom: 34px;
+  width: 1px; height: 46px; background: rgba(255,255,255,0.5);
+}
+.hero-scroll span{
+  position: absolute; top: 0; left: -2px; width: 5px; height: 5px; border-radius: 50%;
+  background: #fff; animation: scrollDot 2.2s ease-in-out infinite;
+}
+@keyframes scrollDot{
+  0%{ top: 0; opacity: 1; }
+  80%{ opacity: 1; }
+  100%{ top: 100%; opacity: 0; }
+}
+
+/* ===================================================================
+   Home — navigator
+=================================================================== */
+.navigator{
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 96px var(--gutter) 40px;
+}
+/* just the eyebrow label now, so it sits tight above the cards */
+.navigator-head{ margin-bottom: 8px; }
+.navigator-head .eyebrow{ margin-bottom: 0; }
+
+.nav-cards{ border-top: 1px solid var(--line); }
+.nav-card{
+  display: grid; grid-template-columns: 72px 1fr auto;
+  align-items: baseline; gap: clamp(12px, 3vw, 40px);
+  padding: 32px 0; border-bottom: 1px solid var(--line);
+  transition: padding-left 0.35s cubic-bezier(.2,.7,.2,1);
+}
+.nav-card:hover{ padding-left: 12px; }
+.nav-card-index{
+  font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint);
+}
+.nav-card-title{
+  display: block;
+  font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 5vw, 62px);
+  line-height: 1.05; letter-spacing: -0.02em; color: var(--ink);
+  transition: color 0.3s ease;
+}
+.nav-card:hover .nav-card-title{ color: var(--stone-deep); }
+.nav-card-desc{
+  display: block; font-size: 14.5px; line-height: 1.65;
+  color: var(--ink-soft); max-width: 52ch; margin-top: 12px;
+}
+.nav-card-arrow{
+  font-family: var(--sans); font-size: 22px; color: var(--line-strong);
+  transition: transform 0.35s cubic-bezier(.2,.7,.2,1), color 0.3s ease;
+}
+.nav-card:hover .nav-card-arrow{ transform: translateX(8px); color: var(--stone); }
+
+/* ===================================================================
+   Sub-page heads
+=================================================================== */
+.page-head{
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 148px var(--gutter) 0;
+}
+.page-head--tight{ padding-bottom: 0; }
+.page-head h1{
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(40px, 7vw, 92px); line-height: 1.02; letter-spacing: -0.02em;
+  margin: 0; color: var(--ink); max-width: 24ch;
+}
+/* a full sentence as the page title, rather than a one-word label */
+.page-head h1.h1-statement{
+  font-size: clamp(25px, 3.4vw, 44px); line-height: 1.28; letter-spacing: -0.01em;
+  max-width: 30ch;
+}
+.page-lede{
+  font-family: var(--serif); font-size: clamp(20px, 2.6vw, 30px); line-height: 1.35;
+  color: var(--ink); max-width: 40ch; margin: 26px 0 0;
+}
+
+/* ===================================================================
+   Intro
+=================================================================== */
+.intro{
+  padding: 56px var(--gutter) 24px;   /* .page-head supplies the top space */
+  max-width: var(--maxw); margin: 0 auto;
+}
+.intro-lede{
+  font-family: var(--serif); font-size: clamp(24px, 3vw, 34px); line-height: 1.35;
+  margin: 0 0 28px; color: var(--ink); max-width: 34ch;
+}
+.intro-body{
+  font-size: 16px; line-height: 1.75; color: var(--ink-soft); max-width: 62ch; margin: 0;
+}
+
+/* ===================================================================
+   CV — dated rows, skills, exhibitions  (about.html)
+=================================================================== */
+.cv{ max-width: var(--maxw); margin: 0 auto; padding: 40px var(--gutter) 30px; }
+
+.cv-block{ padding: 54px 0 10px; border-top: 1px solid var(--line-strong); }
+.cv-block:first-child{ border-top: none; padding-top: 10px; }
+
+.cv-list{ list-style: none; margin: 0; padding: 0; }
+.cv-row{
+  display: grid; grid-template-columns: 210px 1fr; gap: 6px 32px;
+  padding: 22px 0; border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.cv-list .cv-row:first-child{ border-top: 1px solid var(--line); }
+.cv-date{
+  font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.02em;
+  color: var(--stone-deep); white-space: nowrap;
+}
+.cv-title{
+  font-size: clamp(16px, 1.9vw, 20px); font-weight: 500; line-height: 1.4;
+  margin: 0; color: var(--ink);
+}
+.cv-title em{ font-style: normal; font-weight: 400; color: var(--ink-faint); }
+.cv-note{
+  font-size: 14.5px; line-height: 1.7; color: var(--ink-soft);
+  max-width: 62ch; margin: 9px 0 0;
+}
+
+.skill-list{
+  display: flex; flex-wrap: wrap; gap: 8px 10px;
+  list-style: none; margin: 0; padding: 0;
+}
+.skill-list li{
+  font-family: var(--mono); font-size: 12px; color: var(--stone-deep);
+  border: 1px solid var(--line-strong); padding: 6px 11px;
+}
+
+/* ===================================================================
+   Work / Projects
+=================================================================== */
+.work{ padding: 0 var(--gutter) 40px; max-width: var(--maxw); margin: 0 auto; }
+
+.projects{ display: flex; flex-direction: column; }
+
+.project{
+  display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+  gap: clamp(28px, 5vw, 80px);
+  padding: 70px 0; border-top: 1px solid var(--line);
+}
+.project:last-child{ border-bottom: 1px solid var(--line); }
+.project--reverse .project-media{ order: 2; }
+.project--reverse .project-text{ order: 1; }
+
+.project-media{
+  position: relative; overflow: hidden; background: var(--paper);
+  aspect-ratio: 4 / 5; cursor: pointer;
+}
+.project-media img{
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.7s cubic-bezier(.2,.7,.2,1);
+}
+.project-media:hover img{ transform: scale(1.045); }
+.view-tag{
+  position: absolute; left: 16px; bottom: 16px;
+  font-family: var(--mono); font-size: 11.5px; color: #fff;
+  background: rgba(15,14,9,0.6); backdrop-filter: blur(4px);
+  padding: 6px 10px; letter-spacing: 0.02em;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.project-media:hover .view-tag{ opacity: 1; transform: translateY(0); }
+.project-media .count-tag{
+  position: absolute; right: 16px; top: 16px;
+  font-family: var(--mono); font-size: 11px; color: var(--ink);
+  background: rgba(250,249,246,0.85);
+  padding: 5px 9px;
+}
+
+.project-index{
+  font-family: var(--mono); font-size: 13px; color: var(--ink-faint); margin: 0 0 14px;
+}
+.project-title{
+  font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.1; margin: 0 0 16px; color: var(--ink);
+}
+.project-meta{
+  display: flex; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 20px;
+}
+.project-meta span{
+  font-family: var(--mono); font-size: 12px; color: var(--stone-deep);
+  border: 1px solid var(--line-strong); padding: 5px 10px;
+}
+.project-desc{
+  font-size: 15.5px; line-height: 1.75; color: var(--ink-soft);
+  max-width: 52ch; margin: 0 0 20px;
+}
+.project-press{
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 12.5px; color: var(--stone-deep);
+  border-top: 1px solid var(--line); padding-top: 14px; margin-top: 6px;
+}
+.project-press a{ text-decoration: underline; text-underline-offset: 3px; }
+.project-press a:hover{ color: var(--ink); }
+
+/* ===================================================================
+   Exhibition — second category on work.html
+=================================================================== */
+.section-head{
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 76px var(--gutter) 30px;
+}
+.section-head h2{
+  font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 3.2vw, 38px);
+  line-height: 1.25; margin: 0; max-width: 46ch; color: var(--ink);
+}
+
+.exhibition{ padding: 0 var(--gutter) 40px; max-width: var(--maxw); margin: 0 auto; }
+.exhibits{ display: flex; flex-direction: column; }
+
+.exhibit{ padding: 46px 0; border-top: 1px solid var(--line); }
+.exhibit:last-child{ border-bottom: 1px solid var(--line); }
+
+.exhibit-media{
+  position: relative; overflow: hidden; background: var(--paper);
+  aspect-ratio: 16 / 9; cursor: pointer;
+}
+.exhibit-media img{
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.7s cubic-bezier(.2,.7,.2,1);
+}
+.exhibit-media:hover img{ transform: scale(1.03); }
+.exhibit-media:hover .view-tag{ opacity: 1; transform: translateY(0); }
+
+.exhibit-text{
+  display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(24px, 5vw, 72px);
+  padding-top: 30px;
+}
+
+/* ===================================================================
+   Photography rail — photography.html
+=================================================================== */
+.photos{ padding: 52px 0 84px; }
+/* sits inside .page-head, so gutters come from there */
+.photos-hint{
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em;
+  color: var(--panel-soft); margin: 24px 0 0;
+}
+
+/* ---- horizontal rail ---- */
+.photo-rail{ position: relative; }
+
+.photo-track{
+  display: flex; gap: 14px;
+  overflow-x: auto; overflow-y: hidden;
+  padding: 4px var(--gutter) 0;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: var(--gutter);
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;              /* the progress bar below stands in */
+  cursor: grab;
+}
+.photo-track::-webkit-scrollbar{ display: none; }
+.photo-track.is-dragging{ cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; }
+.photo-track:focus-visible{ outline: 2px solid var(--stone); outline-offset: 6px; }
+
+.photo-frame{
+  flex: 0 0 auto; margin: 0;
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+.photo-frame img{
+  display: block;
+  height: clamp(240px, 52vh, 520px);
+  width: auto; max-width: none;       /* uniform height, natural widths */
+  min-width: 180px;                   /* holds space before the file loads */
+  background: #1C1A12;
+  transition: opacity 0.3s ease, filter 0.5s ease;
+}
+.photo-track:hover .photo-frame img{ opacity: 0.55; }
+.photo-track:hover .photo-frame:hover img{ opacity: 1; }
+.photo-track.is-dragging .photo-frame img,
+.photo-track.is-dragging .photo-frame:hover img{ opacity: 1; }
+
+.photo-frame figcaption{
+  display: flex; gap: 10px; align-items: baseline;
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.02em;
+  color: var(--panel-soft); padding-top: 12px;
+}
+.photo-num{ color: var(--stone); }
+
+/* ---- arrows ---- */
+.rail-btn{
+  position: absolute; top: calc(50% - 16px); transform: translateY(-50%);
+  z-index: 3; width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid rgba(237,233,221,0.28);
+  background: rgba(18,17,9,0.72); backdrop-filter: blur(6px);
+  color: var(--panel-text); font-family: var(--sans); font-size: 24px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: opacity 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+.rail-btn:hover{ background: rgba(18,17,9,0.92); border-color: var(--stone); }
+.rail-btn:disabled{ opacity: 0; pointer-events: none; }
+.rail-btn--prev{ left: max(10px, calc(var(--gutter) - 58px)); }
+.rail-btn--next{ right: max(10px, calc(var(--gutter) - 58px)); }
+
+/* ---- progress bar ---- */
+.photo-progress{
+  max-width: var(--maxw); margin: 34px auto 0; padding: 0 var(--gutter);
+  height: 1px; position: relative;
+  background: var(--panel-line);
+  background-clip: content-box;       /* keep the line inside the gutters */
+}
+.photo-progress span{
+  position: absolute; left: var(--gutter); right: var(--gutter); top: 0; height: 1px;
+  background: var(--stone); transform-origin: left; transform: scaleX(0.04);
+  transition: transform 0.15s linear;
+}
+
+/* ===================================================================
+   Contact
+=================================================================== */
+.contact{
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 56px var(--gutter) 40px;
+}
+.contact-list{ margin: 0; border-top: 1px solid var(--line); max-width: 900px; }
+.contact-row{
+  display: grid; grid-template-columns: 190px 1fr; gap: 16px;
+  padding: 24px 0; border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.contact-row dt{
+  font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.03em;
+  color: var(--stone-deep);
+}
+.contact-row dd{
+  margin: 0; font-size: clamp(16px, 1.8vw, 20px); line-height: 1.55; color: var(--ink);
+}
+.contact-row dd a{
+  text-decoration: underline; text-underline-offset: 4px;
+  text-decoration-color: var(--line-strong);
+  transition: text-decoration-color 0.25s ease;
+}
+.contact-row dd a:hover{ text-decoration-color: var(--stone); }
+.contact-row dd small{
+  display: block; font-family: var(--mono); font-size: 12px;
+  color: var(--ink-faint); margin-top: 8px;
+}
+
+/* ===================================================================
+   Footer
+=================================================================== */
+.site-footer{ padding: 90px var(--gutter) 34px; max-width: var(--maxw); margin: 0 auto; }
+.footer-top{
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px;
+  padding-bottom: 46px; border-bottom: 1px solid var(--line);
+}
+.footer-mark{ display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 26px; }
+.footer-line{ font-size: 14.5px; line-height: 1.7; color: var(--ink-soft); max-width: 46ch; }
+
+.footer-nav{
+  display: flex; flex-wrap: wrap; gap: 8px 34px;
+  padding: 26px 0 20px; border-bottom: 1px solid var(--line);
+  font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+.footer-nav a{ position: relative; }
+.footer-nav a:hover{ color: var(--ink); }
+.footer-nav a[aria-current="page"]{ color: var(--stone-deep); }
+
+.footer-bottom{
+  display: flex; justify-content: space-between; padding-top: 22px;
+  font-family: var(--mono); font-size: 12px; color: var(--ink-faint);
+}
+.footer-bottom a:hover{ color: var(--ink); }
+
+/* ===================================================================
+   Dark page theme — photography.html
+=================================================================== */
+body.page-dark{ background: var(--panel); color: var(--panel-text); }
+body.page-dark .grain{ mix-blend-mode: screen; opacity: 0.05; }
+body.page-dark .page-head h1{ color: var(--panel-text); }
+body.page-dark .eyebrow{ color: var(--panel-soft); }
+
+body.page-dark .nav-mark{ color: var(--panel-text); }
+body.page-dark .nav-links a{ color: var(--panel-text); }
+body.page-dark .nav-toggle span{ background: var(--panel-text); }
+body.page-dark .nav.is-scrolled{
+  background: rgba(18,17,9,0.86);
+  border-bottom-color: var(--panel-line);
+}
+
+body.page-dark .footer-top,
+body.page-dark .footer-nav{ border-bottom-color: var(--panel-line); }
+body.page-dark .footer-mark{ color: var(--panel-text); }
+body.page-dark .footer-line,
+body.page-dark .footer-nav{ color: var(--panel-soft); }
+body.page-dark .footer-nav a:hover,
+body.page-dark .footer-bottom a:hover{ color: #fff; }
+body.page-dark .footer-bottom{ color: var(--panel-soft); }
+
+/* ===================================================================
+   Lightbox
+=================================================================== */
+.lightbox{
+  position: fixed; inset: 0; z-index: 1000; background: rgba(10,9,6,0.96);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.lightbox.is-open{ opacity: 1; pointer-events: auto; }
+.lb-frame{ max-width: min(88vw, 1200px); max-height: 78vh; }
+.lb-frame img{ max-width: 100%; max-height: 78vh; width: auto; margin: 0 auto; object-fit: contain; }
+.lb-caption{
+  position: absolute; left: 0; right: 0; bottom: 26px; text-align: center;
+  font-family: var(--mono); font-size: 12.5px; color: #C7C3B4;
+  display: flex; justify-content: center; gap: 14px;
+}
+.lb-close, .lb-prev, .lb-next{
+  position: absolute; background: none; border: none; color: #fff; cursor: pointer;
+  font-family: var(--sans); line-height: 1;
+}
+.lb-close{ top: 26px; right: var(--gutter); font-size: 20px; }
+.lb-prev, .lb-next{ top: 50%; transform: translateY(-50%); font-size: 40px; padding: 10px 16px; opacity: 0.75; }
+.lb-prev{ left: clamp(8px, 2vw, 30px); }
+.lb-next{ right: clamp(8px, 2vw, 30px); }
+.lb-prev:hover, .lb-next:hover, .lb-close:hover{ opacity: 1; }
+
+/* ===================================================================
+   Responsive
+=================================================================== */
+@media (max-width: 900px){
+  .nav-links{
+    position: fixed; top: 0; right: 0; height: 100vh; width: min(78vw, 320px);
+    background: var(--bg); flex-direction: column; padding: 100px 32px;
+    transform: translateX(100%); transition: transform 0.35s ease;
+    box-shadow: -10px 0 40px rgba(0,0,0,0.15);
+  }
+  .nav-links.is-open{ transform: translateX(0); }
+  /* the drawer is a solid light panel, so its links stay dark on every page */
+  .nav-links a,
+  body.page-hero .nav:not(.is-scrolled) .nav-links a{ color: var(--ink); font-size: 17px; }
+  .nav-toggle{ display: block; }
+  body.page-dark .nav-links{ background: var(--panel); box-shadow: -10px 0 40px rgba(0,0,0,0.5); }
+  body.page-dark .nav-links a{ color: var(--panel-text); }
+
+  .nav-card{ grid-template-columns: 44px 1fr auto; padding: 26px 0; }
+  .cv-row{ grid-template-columns: 1fr; gap: 8px; }
+  .contact-row{ grid-template-columns: 1fr; gap: 8px; }
+  .project, .project--reverse{ grid-template-columns: 1fr; }
+  .project-media, .project--reverse .project-media{ order: 1; }
+  .project-text, .project--reverse .project-text{ order: 2; }
+  .project-media{ aspect-ratio: 4/3; }
+  .exhibit-text{ grid-template-columns: 1fr; gap: 18px; }
+
+  .footer-bottom{ flex-direction: column; gap: 10px; }
+}
+
+@media (max-width: 560px){
+  .hero-content{ bottom: 56px; }
+  .work, .intro, .navigator, .page-head{ padding-left: 20px; padding-right: 20px; }
+  .page-head{ padding-top: 116px; }
+  .photo-frame img{ height: clamp(220px, 40vh, 300px); }
+  /* on a touch screen the swipe is the control — arrows only get in the way */
+  .rail-btn{ display: none; }
+  .photo-track:hover .photo-frame img{ opacity: 1; }
+}
+
+/* Focus visibility */
+a:focus-visible, button:focus-visible{
+  outline: 2px solid var(--stone); outline-offset: 3px;
+}

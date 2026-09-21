@@ -1,0 +1,10 @@
+# Full-resolution originals. The site only uses the web-sized copies
+# (assets/photography/, assets/hero-background.jpg), so these stay local.
+assets/PHOTOGTAPHY/
+assets/GTV EXHIBITION/
+assets/BACKGROUND.jpg
+
+# OS clutter
+Thumbs.db
+desktop.ini
+.DS_Store
